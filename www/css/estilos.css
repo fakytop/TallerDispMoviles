@@ -1,0 +1,18 @@
+
+
+ion-page:not(.active) {
+    display: none;
+}
+
+.grafica {
+    max-width: 500px;
+}
+
+.notActive {
+    display:none;
+}
+
+#map {
+    height: 300px;
+    max-width: 500px;
+}

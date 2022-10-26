@@ -1,0 +1,6 @@
+{
+  "appId": "com.cryptodevelotio.app",
+  "appName": "cryptodevelotion",
+  "webDir": "www",
+  "bundledWebRuntime": true
+}

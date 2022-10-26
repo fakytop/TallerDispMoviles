@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cripto</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
+</head>
+
+<body>
+
+    <ion-app>
+        <ion-router>
+            <ion-route url="/" component="pagina-inicio"></ion-route>
+            <ion-route url="/inicio-sesion" component="pagina-inicio-sesion"></ion-route>
+            <ion-route url="/registro" component="pagina-registro"></ion-route>
+            <ion-route url="/crear-transaccion" component="pagina-crear-transaccion"></ion-route>
+            <ion-route url="/ver-transacciones" component="pagina-ver-transacciones"></ion-route>
+            <ion-route url="/total-inversiones" component="pagina-total-inversiones"></ion-route>
+            <ion-route url="/ver-sugerencias-transacciones" component="pagina-ver-sugerencias-transacciones"></ion-route>
+            <ion-route url="/estadisticas" component="pagina-estadisticas"></ion-route>
+            <ion-route url="/estadisticas-moneda" component="pagina-estadisticas-moneda"></ion-route>
+            <ion-route url="/listado-monedas" component="pagina-listado-monedas"></ion-route>
+            <ion-route url="/usuarios-dpto" component="pagina-usuarios-dpto"></ion-route>
+        </ion-router>
+        <ion-nav></ion-nav>
+        <!-- Botonera del Menú -->
+        <ion-menu side="start" menu-id="main-menu" content-id="main-content">
+            <ion-header>
+                <ion-toolbar color="primary">
+                    <ion-title>Start Menu</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item button href="/"><ion-icon name="home-outline"></ion-icon>Inicio</ion-item>
+                    <ion-item button href="/inicio-sesion" id="menuInicioSesion"><ion-icon name="arrow-forward-outline"></ion-icon> Iniciar Sesión</ion-item>
+                    <ion-item button href="/registro" id="menuRegistro"><ion-icon name="log-in-outline"></ion-icon>Registrarse</ion-item>
+                    <ion-item button href="/listado-monedas" id="menuListadoMonedas"><ion-icon name="list-circle-outline"></ion-icon>Monedas</ion-item>
+                    <ion-item button href="/crear-transaccion" id="menuCrearTransaccion"><ion-icon name="create-outline"></ion-icon>Nueva Transacción</ion-item>
+                    <ion-item button href="/ver-transacciones" id="menuVerTransacciones"><ion-icon name="wallet-outline"></ion-icon>Ver Transacciones</ion-item>
+                    <ion-item button href="/total-inversiones" id="menuTotalTransacciones"><ion-icon name="cash-outline"></ion-icon>Total de Transacciones</ion-item>
+                    <ion-item button href="/ver-sugerencias-transacciones" id="menuSugerencias"><ion-icon name="wallet-outline"></ion-icon>Sugerencias</ion-item>
+                    <ion-item button href="/estadisticas" id="menuEstadisticas"><ion-icon name="bar-chart-outline"></ion-icon>Estadísticas Compras/Ventas</ion-item>
+                    <ion-item button href="/estadisticas-moneda" id="menuEstadisticasMoneda"><ion-icon name="analytics-outline"></ion-icon> Historicos Transacciones por Monedas</ion-item>
+                    <ion-item button href="/usuarios-dpto" id="menuUsuarioDpto"><ion-icon name="people-outline"></ion-icon> Usuarios por Depto.</ion-item>
+                    <ion-item button href="/" id="menuCerrarSesion"><ion-icon name="log-out-outline"></ion-icon> Cerrar Sesión</ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+
+        <ion-content id="main-content">
+            <ion-page class="ion-page" id="pagina-inicio">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Inicio</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+
+                <ion-content>
+                    <ion-item>
+                        <p>
+                            Bienvenidos al sistema de transacciones <strong>Crypto Develotion</strong>
+                        </p>
+                    </ion-item>
+                    <ion-button class="sin-iniciar-sesion" expand="block" id="btnIrIniciarSesion" color="success"
+                        href="/inicio-sesion">Iniciar Sesión<ion-icon name="arrow-forward-outline"></ion-icon></ion-button>
+                    <ion-button class="sin-iniciar-sesion" expand="block" id="btnIrRegistrar" href="/registro">
+                        Registrarse<ion-icon name="log-in-outline"></ion-icon></ion-button>
+                    <ion-button class="sesion-iniciada" expand="block" id="btnCerrarSesion" color="danger" href="/">
+                        Cerrar Sesión<ion-icon name="log-out-outline"></ion-icon></ion-button>
+                </ion-content>
+            </ion-page>
+
+
+            <ion-page class="ion-page" id="pagina-inicio-sesion">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Iniciar Sesión</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-content>
+                        <ion-card>
+                            <form>
+                                <ion-item>
+                                    <ion-label position="floating">Usuario</ion-label>
+                                    <ion-input type="text" id="txtUsuarioInicioSesion"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-label position="floating">Contraseña</ion-label>
+                                    <ion-input type="password" id="txtPasswordInicioSesion"></ion-input>
+                                </ion-item>
+                                <ion-button expand="block" id="sbmIniciarSesion">Iniciar Sesión<ion-icon name="arrow-forward-outline"></ion-icon></ion-button>
+                            </form>
+                        </ion-card>
+                    </ion-content>
+
+                </ion-content>
+
+            </ion-page>
+            <ion-page class="ion-page" id="pagina-registro">
+                <ion-header>
+                    <ion-toolbar color="secundary">
+                        <ion-title>Registro.</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-card>
+                        <form>
+                            <ion-item>
+                                <ion-label position="floating">Usuario</ion-label>
+                                <ion-input type="text" id="txtUsuario"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Contraseña</ion-label>
+                                <ion-input type="password" id="txtPassword"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Departamento</ion-label>
+                                <ion-input type="text" id="txtDepto"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Ciudad</ion-label>
+                                <ion-input type="text" id="txtCiudad"></ion-input>
+                            </ion-item>
+                            <ion-button expand="block" id="sbmRegistro">Registrar<ion-icon name="log-in-outline"></ion-icon></ion-button>
+                        </form>
+                    </ion-card>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-crear-transaccion">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Nueva Transacción</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-card>
+                        <form>
+                            <ion-item>
+                                <ion-select placeholder="Tipo de Operación" id="slcTipoOperacion">
+                                    <ion-select-option value="1">Compra</ion-select-option>
+                                    <ion-select-option value="2">Venta</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-select placeholder="Seleccione Moneda" id="slcMoneda"></ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Cantidad</ion-label>
+                                <ion-input type="number" id="nmbCantidadMoneda"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <p id="pValorMoneda"></p>
+                            </ion-item>
+                            <ion-button expand="block" id="sbmCrearTransaccion">Realizar Transacción</ion-button>
+                        </form>
+                    </ion-card>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-listado-monedas">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Monedas</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-card>
+                        <div id="listadoMonedas"></div>
+                    </ion-card>
+                </ion-content>
+            </ion-page>
+
+
+
+            <ion-page class="ion-page" id="pagina-ver-transacciones">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Todas sus transacciones</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-item>
+                    <ion-select id="selectTransaccionesPorMoneda"></ion-select>
+                </ion-item>
+                <ion-content>
+                    <div id="cntVerTransacciones"></div>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-total-inversiones">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Total de Inversiones</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-card>
+                        <ion-card-header>
+                            <div id="divTotalInversion"></div>
+                        </ion-card-header>
+                    </ion-card>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-ver-sugerencias-transacciones">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Sugerencias</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <div id="divSugerencias"></div>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-estadisticas">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Estadísticas</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-card>
+                        <canvas class="grafica" id="divMontosComprados"></canvas>
+                    </ion-card>
+                    <ion-card>
+                        <canvas class="grafica" id="divMontosVendidos"></canvas>
+                    </ion-card>
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-estadisticas-moneda">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Estadísticas por Moneda</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-item>
+                        <ion-select placeholder="Seleccione Moneda" id="slcMonedaGrafica"></ion-select>
+                    </ion-item>
+                    <ion-card>
+                        <canvas class="grafica" id="divValorTransacciones"></canvas>
+                    </ion-card>
+
+                </ion-content>
+            </ion-page>
+
+            <ion-page class="ion-page" id="pagina-usuarios-dpto">
+                <ion-header>
+                    <ion-toolbar color="primary">
+                        <ion-title>Usuarios por Dpto</ion-title>
+                        <ion-buttons slot="start">
+                            <ion-menu-button menu="main-menu"></ion-menu-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                    <ion-content>
+                        <div id="map"></div>
+                    </ion-content>
+                </ion-page>
+        </ion-content>
+
+
+
+
+
+
+
+    </ion-app>
+
+
+
+
+
+
+    <script type="text/javascript" src="js/myCode.js"></script>
+</body>
+
+</html>
